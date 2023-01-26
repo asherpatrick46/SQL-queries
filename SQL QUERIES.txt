@@ -1,0 +1,82 @@
+-- Select the country and distinct count of certification as certification_count
+
+SELECT country, COUNT(DISTINCT certification) as certification_count
+FROM films
+-- Group by country
+GROUP BY country
+-- Filter results to countries with more than 10 different certifications
+HAVING COUNT(DISTINCT certification) > 10 ;
+
+
+-- Select the country and average_budget from films
+SELECT country, ROUND(AVG(budget), 2) AS average_budget
+FROM films
+-- Group by country
+GROUP BY country
+-- Filter to countries with an average_budget of more than one billion
+HAVING AVG(budget) > 1000000000
+-- Order by descending order of the aggregated budget
+ORDER BY average_budget DESC;
+
+
+
+SELECT release_year, AVG(budget) AS avg_budget, AVG(gross) AS avg_gross
+FROM films
+WHERE release_year > 1990
+GROUP BY release_year
+HAVING AVG(budget) > 60000000
+-- Order the results from highest to lowest average gross and limit to one
+ORDER BY avg_gross DESC
+LIMIT 1;
+
+
+-------------------------INNER JOIN PRACTICE
+
+SELECT * 
+FROM cities
+-- Inner join to countries
+INNER JOIN countries
+-- Match on country codes
+ON cities.country_code = countries.code;
+
+
+-- Select fields with aliases
+SELECT c.code AS country_code, name, year, inflation_rate
+FROM countries AS c
+-- Join to economies (alias e)
+INNER JOIN economies AS e
+-- Match on code field using table aliases
+ON c.code = e.code;
+
+
+
+
+SELECT name, year, fertility_rate
+-- Inner join countries and populations, aliased, on code
+FROM countries AS c
+INNER JOIN populations AS p
+ON c.code = p.country_code;
+
+
+-- Select fields
+SELECT name, e.year, fertility_rate, unemployment_rate
+FROM countries AS c
+INNER JOIN populations AS p
+ON c.code = p.country_code
+-- Join to economies (as e)
+INNER JOIN economies AS e
+-- Match on country code
+ON c.code = e.code;
+
+
+SELECT 
+	c1.name AS city, 
+    code, 
+    c2.name AS country,
+    region, 
+    city_proper_pop
+FROM cities AS c1
+-- Join right table (with alias)
+LEFT JOIN countries AS c2
+ON c1.country_code = c2.code
+ORDER BY code DESC;
